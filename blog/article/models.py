@@ -7,7 +7,7 @@ from django.utils.text import slugify
 
 class Article(models.Model):
     author = models.ForeignKey(
-        User, on_delete=models.CASCADE, related_name='article')
+        User, on_delete=models.CASCADE, related_name='articles')
     title = models.CharField(max_length=100)
     body = models.TextField(max_length=1000)
     posted = models.DateTimeField(auto_now_add=True)
@@ -24,7 +24,7 @@ class Article(models.Model):
 
 class Comment(models.Model):
     article = models.ForeignKey(
-        Article, on_delete=models.CASCADE, related_name="comment")
+        Article, on_delete=models.CASCADE, related_name="comments")
     author = models.ForeignKey(User, on_delete=models.CASCADE)
     comment = models.CharField(max_length=300)
     created = models.DateTimeField(auto_now_add=True)

@@ -7,11 +7,11 @@ from .models import Article, Comment
 
 class UserSerializer(serializers.HyperlinkedModelSerializer):
     articles = serializers.HyperlinkedRelatedField(
-        many=True, view_name='article-detail', read_only=True)
+        many=True, view_name='article:article-detail', read_only=True)
 
     class Meta:
         model = User
-        fields = ['url', 'id', 'username', 'articles']
+        fields = ['id', 'username', 'email', 'articles']
 
 
 class CommentSerializer(serializers.ModelSerializer):
@@ -24,9 +24,13 @@ class CommentSerializer(serializers.ModelSerializer):
 
 
 class ArticleSerializer(serializers.HyperlinkedModelSerializer):
-    comment = CommentSerializer(many=True, read_only=True)
+    comments = CommentSerializer(many=True, read_only=True)
 
     class Meta:
         model = Article
         fields = ['url', 'id', 'author', 'title', 'body',
-                  'posted', 'updated', 'slug', 'comment']
+                  'posted', 'updated', 'slug', 'comments']
+        extra_kwargs = {
+            'url': {'view_name': 'article:article-detail'},
+            'author': {'view_name': 'article:user-detail'}
+        }
