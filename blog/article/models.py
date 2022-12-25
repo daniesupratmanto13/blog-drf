@@ -6,7 +6,8 @@ from django.utils.text import slugify
 
 
 class Article(models.Model):
-    author = models.ForeignKey(User, on_delete=models.CASCADE)
+    author = models.ForeignKey(
+        User, on_delete=models.CASCADE, related_name='article')
     title = models.CharField(max_length=100)
     body = models.TextField(max_length=1000)
     posted = models.DateTimeField(auto_now_add=True)
