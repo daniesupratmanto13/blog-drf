@@ -26,8 +26,30 @@ class Comment(models.Model):
     article = models.ForeignKey(
         Article, on_delete=models.CASCADE, related_name="comments")
     author = models.ForeignKey(User, on_delete=models.CASCADE)
+
     comment = models.CharField(max_length=300)
     created = models.DateTimeField(auto_now_add=True)
 
     def __str__(self) -> str:
         return self.comment
+
+
+class LikeArticle(models.Model):
+    LIKE = 'LK'
+    UNLIKE = 'UL'
+    LIKE_CHOICES = [
+        (LIKE, 'Like'),
+        (UNLIKE, 'Unlike')
+    ]
+
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    article = models.ForeignKey(Article, on_delete=models.CASCADE)
+    value = models.CharField(
+        max_length=2,
+        choices=LIKE_CHOICES,
+        default=LIKE
+    )
+    created = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self) -> str:
+        return f"{self.user}-{self.value}-{self.article}"
