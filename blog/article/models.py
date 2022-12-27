@@ -21,6 +21,14 @@ class Article(models.Model):
         self.slug = slugify(self.title)
         super().save(*args, **kwargs)
 
+    @property
+    def total_likes(self) -> int:
+        return self.likesarticle.filter(value='LK').count()
+
+    @property
+    def total_comments(self) -> int:
+        return self.comments.all().count()
+
 
 class Comment(models.Model):
     article = models.ForeignKey(
@@ -34,7 +42,7 @@ class Comment(models.Model):
         return self.comment
 
 
-class LikeArticle(models.Model):
+class LikeUnlikeArticle(models.Model):
     LIKE = 'LK'
     UNLIKE = 'UL'
     LIKE_CHOICES = [
