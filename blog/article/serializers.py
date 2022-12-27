@@ -2,7 +2,7 @@ from django.contrib.auth.models import User
 from rest_framework import serializers
 
 # models
-from .models import Article, Comment
+from .models import Article, Comment, LikeArticle
 
 
 class UserSerializer(serializers.HyperlinkedModelSerializer):
@@ -15,7 +15,7 @@ class UserSerializer(serializers.HyperlinkedModelSerializer):
 
 
 class CommentSerializer(serializers.ModelSerializer):
-    article = serializers.ReadOnlyField(source='article.title')
+    article = serializers.ReadOnlyField(source='article.slug')
     author = serializers.ReadOnlyField(source='author.username')
 
     class Meta:
@@ -23,13 +23,34 @@ class CommentSerializer(serializers.ModelSerializer):
         fields = ['article', 'author', 'comment', 'created']
 
 
+class LikeArticleSerializer(serializers.ModelSerializer):
+    article = serializers.ReadOnlyField(source='article.slug')
+    user = serializers.ReadOnlyField(source='user.username')
+
+    class Meta:
+        model = LikeArticle
+        fields = ['article', 'user', 'value', 'created']
+
+
+class LikeInArticleSerializer(serializers.ModelSerializer):
+    user = serializers.ReadOnlyField(source='user.username')
+
+    class Meta:
+        model = LikeArticle
+        fields = ['user', 'value', 'created']
+
+
 class ArticleSerializer(serializers.HyperlinkedModelSerializer):
     comments = CommentSerializer(many=True, read_only=True)
+    likesarticle = LikeInArticleSerializer(many=True, read_only=True)
+
+    def get_likesarticle(self, obj):
+        return obj.username
 
     class Meta:
         model = Article
         fields = ['url', 'id', 'author', 'title', 'body',
-                  'posted', 'updated', 'slug', 'comments']
+                  'posted', 'updated', 'slug', 'likesarticle', 'comments']
         extra_kwargs = {
             'url': {'view_name': 'article:article-detail'},
             'author': {'view_name': 'article:user-detail'}

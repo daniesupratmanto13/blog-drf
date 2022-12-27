@@ -42,8 +42,10 @@ class LikeArticle(models.Model):
         (UNLIKE, 'Unlike')
     ]
 
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
-    article = models.ForeignKey(Article, on_delete=models.CASCADE)
+    user = models.ForeignKey(
+        User, on_delete=models.CASCADE, related_name='likesuser')
+    article = models.ForeignKey(
+        Article, on_delete=models.CASCADE, related_name='likesarticle')
     value = models.CharField(
         max_length=2,
         choices=LIKE_CHOICES,
