@@ -9,7 +9,7 @@ from rest_framework.reverse import reverse
 from .models import Article, Comment
 
 # serializers
-from .serializers import ArticleSerializer, CommentSerializer, UserSerializer
+from .serializers import ArticleSerializer, CommentReadSerializer, UserSerializer
 
 # Create your views here.
 
@@ -45,9 +45,9 @@ class ArticleDetail(generics.RetrieveAPIView):
 
 # class CommentList(generics.ListAPIView):
 #     queryset = Comment.objects.all()
-#     serializer_class = CommentSerializer
+#     serializer_class = CommentReadSerializer
 
 
 # class CommentDetail(generics.RetrieveAPIView):
 #     queryset = Comment.objects.all()
-#     serializer_class = CommentSerializer
+#     serializer_class = CommentReadSerializer
