@@ -1,15 +1,19 @@
 from django.contrib.auth.models import User
-from django.shortcuts import render
 from rest_framework import generics
+from rest_framework import mixins
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from rest_framework.reverse import reverse
 
 # models
-from .models import Article, Comment
+from .models import Article
 
 # serializers
-from .serializers import ArticleSerializer, CommentReadSerializer, UserSerializer
+from .serializers import (
+    ArticleSerializer,
+    CommentPostSerializer,
+    UserSerializer,
+)
 
 # Create your views here.
 
@@ -33,21 +37,42 @@ class UserDetail(generics.RetrieveAPIView):
     serializer_class = UserSerializer
 
 
-class ArticleList(generics.ListAPIView):
+class CommentCreate(generics.CreateAPIView):
+    serializer_class = CommentPostSerializer
+
+
+class ArticleList(
+    mixins.ListModelMixin,
+    mixins.CreateModelMixin,
+    generics.GenericAPIView
+):
     queryset = Article.objects.all()
     serializer_class = ArticleSerializer
 
+    def get(self, request, *args, **kwargs):
+        return self.list(request, *args, **kwargs)
 
-class ArticleDetail(generics.RetrieveAPIView):
+    def post(self, request, *args, **kwargs):
+        return self.create(request, *args, **kwargs)
+
+    def perform_create(self, serializer):
+        serializer.save(author=self.request.user)
+
+
+class ArticleDetail(
+    mixins.RetrieveModelMixin,
+    mixins.UpdateModelMixin,
+    mixins.DestroyModelMixin,
+    generics.GeneralAPIView
+):
     queryset = Article.objects.all()
     serializer_class = ArticleSerializer
 
+    def get(self, request, *args, **kwargs):
+        return self.retrieve(request, *args, **kwargs)
 
-# class CommentList(generics.ListAPIView):
-#     queryset = Comment.objects.all()
-#     serializer_class = CommentReadSerializer
+    def put(self, request, *args, **kwargs):
+        return self.update(request, *args, **kwargs)
 
-
-# class CommentDetail(generics.RetrieveAPIView):
-#     queryset = Comment.objects.all()
-#     serializer_class = CommentReadSerializer
+    def delete(self, request, *args, **kwargs):
+        return self.destroy(request, *args, **kwargs)

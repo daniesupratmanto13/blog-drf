@@ -14,7 +14,7 @@ class UserSerializer(serializers.HyperlinkedModelSerializer):
         fields = ['id', 'username', 'email', 'articles']
 
 
-class CommentReadSerializer(serializers.ModelSerializer):
+class CommentNestedArticleSerializer(serializers.ModelSerializer):
     article = serializers.ReadOnlyField(source='article.slug')
     author = serializers.ReadOnlyField(source='author.username')
 
@@ -46,7 +46,7 @@ class LikeNestedArticleSerializer(serializers.ModelSerializer):
 
 
 class ArticleSerializer(serializers.HyperlinkedModelSerializer):
-    comments = CommentReadSerializer(many=True, read_only=True)
+    comments = CommentNestedArticleSerializer(many=True, read_only=True)
     likesarticle = LikeNestedArticleSerializer(many=True, read_only=True)
     total_likes = serializers.ReadOnlyField()
     total_comments = serializers.ReadOnlyField()
