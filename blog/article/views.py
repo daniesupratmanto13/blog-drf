@@ -6,12 +6,13 @@ from rest_framework.response import Response
 from rest_framework.reverse import reverse
 
 # models
-from .models import Article
+from .models import Article, LikeUnlikeArticle
 
 # serializers
 from .serializers import (
     ArticleSerializer,
     CommentPostSerializer,
+    LikeArticleSerializer,
     UserSerializer,
 )
 
@@ -41,6 +42,25 @@ class CommentCreate(generics.CreateAPIView):
     serializer_class = CommentPostSerializer
 
 
+class LikeCreate(generics.CreateAPIView):
+    serializer_class = LikeArticleSerializer
+
+
+class LikeUpdate(
+    mixins.RetrieveModelMixin,
+    mixins.UpdateModelMixin,
+    generics.GenericAPIView
+):
+    queryset = LikeUnlikeArticle.objects.all()
+    serializer_class = LikeArticleSerializer
+
+    def get(self, request, *args, **kwargs):
+        return self.retrieve(request, *args, **kwargs)
+
+    def put(self, request, *args, **kwargs):
+        return self.update(request, *args, **kwargs)
+
+
 class ArticleList(
     mixins.ListModelMixin,
     mixins.CreateModelMixin,
@@ -55,15 +75,12 @@ class ArticleList(
     def post(self, request, *args, **kwargs):
         return self.create(request, *args, **kwargs)
 
-    def perform_create(self, serializer):
-        serializer.save(author=self.request.user)
-
 
 class ArticleDetail(
     mixins.RetrieveModelMixin,
     mixins.UpdateModelMixin,
     mixins.DestroyModelMixin,
-    generics.GeneralAPIView
+    generics.GenericAPIView
 ):
     queryset = Article.objects.all()
     serializer_class = ArticleSerializer
