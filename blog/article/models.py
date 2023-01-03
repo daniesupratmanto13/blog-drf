@@ -19,12 +19,15 @@ class Article(models.Model):
 
     __title = None
 
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.__title = self.title
+
     def __str__(self) -> str:
         return self.title
 
     def save(self, *args, **kwargs) -> None:
         self.slug = slugify(self.title)
-        self.__title = self.title
         unique_slugify(self.title, self.__title, self.slug, Article)
         super().save(*args, **kwargs)
 
