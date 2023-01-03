@@ -11,11 +11,11 @@ from .utils import unique_slugify
 class Article(models.Model):
     author = models.ForeignKey(
         User, on_delete=models.CASCADE, related_name='articles')
-    title = models.CharField(max_length=100)
+    title = models.CharField(max_length=100, blank=False)
     body = models.TextField(max_length=1000)
     posted = models.DateTimeField(auto_now_add=True)
     updated = models.DateTimeField(auto_now=True)
-    slug = models.SlugField(blank=True)
+    slug = models.SlugField(blank=True, unique=True)
 
     __title = None
 
