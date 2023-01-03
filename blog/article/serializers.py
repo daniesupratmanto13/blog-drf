@@ -11,7 +11,10 @@ class UserSerializer(serializers.HyperlinkedModelSerializer):
 
     class Meta:
         model = User
-        fields = ['id', 'username', 'email', 'articles']
+        fields = ['id', 'username', 'email', 'articles', 'password']
+        extra_kwargs = {
+            'password': {'write_only': True}
+        }
 
 
 class CommentNestedArticleSerializer(serializers.ModelSerializer):

@@ -4,6 +4,9 @@ from django.utils.text import slugify
 
 # Create your models here.
 
+# utils
+from .utils import unique_slugify
+
 
 class Article(models.Model):
     author = models.ForeignKey(
@@ -14,11 +17,15 @@ class Article(models.Model):
     updated = models.DateTimeField(auto_now=True)
     slug = models.SlugField(blank=True)
 
+    __title = None
+
     def __str__(self) -> str:
         return self.title
 
     def save(self, *args, **kwargs) -> None:
         self.slug = slugify(self.title)
+        self.__title = self.title
+        unique_slugify(self.title, self.__title, self.slug, Article)
         super().save(*args, **kwargs)
 
     @property
