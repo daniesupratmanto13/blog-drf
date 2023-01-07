@@ -91,9 +91,10 @@ class LikeCreate(generics.CreateAPIView):
     serializer_class = LikeArticleSerializer
 
 
-class LikeUpdate(
+class LikeDetail(
     mixins.RetrieveModelMixin,
     mixins.UpdateModelMixin,
+    mixins.DestroyModelMixin,
     generics.GenericAPIView
 ):
     queryset = LikeUnlikeArticle.objects.all()
@@ -104,6 +105,9 @@ class LikeUpdate(
 
     def put(self, request, *args, **kwargs):
         return self.update(request, *args, **kwargs)
+
+    def delete(self, request, *args, **kwargs):
+        return self.destroy(request, *args, **kwargs)
 
 
 class ArticleList(

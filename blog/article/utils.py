@@ -3,7 +3,7 @@ from uuid import uuid4
 
 
 def get_random_code(n: int) -> str:
-    return str(uuid4())[:n].upper()
+    return str(uuid4())[:n].replace("-", "").upper()
 
 
 def unique_slugify(title, temp_title, slug, Model, len_random: int) -> str:
