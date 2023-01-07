@@ -28,7 +28,7 @@ class Article(models.Model):
 
     def save(self, *args, **kwargs) -> None:
         self.slug = unique_slugify(
-            self.title, self.__title, self.slug, Article)
+            self.title, self.__title, self.slug, Article, 5)
         super().save(*args, **kwargs)
 
     @property
