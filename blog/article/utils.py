@@ -19,5 +19,4 @@ def unique_slugify(title, temp_title, slug, Model):
             exists_slug = Model.objects.filter(
                 slug=temp_slug).exists()
 
-    slug = temp_slug
-    # super().save(*args, **kwargs)
+    return temp_slug
