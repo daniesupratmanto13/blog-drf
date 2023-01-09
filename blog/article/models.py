@@ -1,11 +1,21 @@
 from django.contrib.auth.models import User
 from django.db import models
-from django.utils.text import slugify
 
 # Create your models here.
 
 # utils
-from .utils import unique_slugify
+from .utils import profile_pic_path, unique_slugify
+
+
+class Profile(models.Model):
+    user = models.OneToOneField(User, on_delete=models.CASCADE)
+    first_name = models.CharField(max_length=100, blank=True, null=True)
+    last_name = models.CharField(max_length=100, blank=True, null=True)
+    email = models.EmailField(max_length=150, blank=True, null=True)
+    bio = models.TextField(max_length=400, blank=True, null=True)
+    picture = models.ImageField(default='', upload_to=profile_pic_path)
+    created = models.DateTimeField(auto_now_add=True)
+    updated = models.DateTimeField(auto_now=True)
 
 
 class Article(models.Model):
