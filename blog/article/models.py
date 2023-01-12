@@ -13,9 +13,13 @@ class Profile(models.Model):
     last_name = models.CharField(max_length=100, blank=True, null=True)
     email = models.EmailField(max_length=150, blank=True, null=True)
     bio = models.TextField(max_length=400, blank=True, null=True)
-    picture = models.ImageField(default='', upload_to=profile_pic_path)
+    picture = models.ImageField(
+        default='blank-profile.webp', upload_to=profile_pic_path)
     created = models.DateTimeField(auto_now_add=True)
     updated = models.DateTimeField(auto_now=True)
+
+    def __str__(self) -> str:
+        return f'{self.id}_{self.first_name} {self.last_name}'
 
 
 class Article(models.Model):
