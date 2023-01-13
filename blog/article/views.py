@@ -9,13 +9,14 @@ from rest_framework.authtoken.models import Token
 from rest_framework.authtoken.serializers import AuthTokenSerializer
 
 # models
-from .models import Article, LikeUnlikeArticle
+from .models import Article, LikeUnlikeArticle, Profile
 
 # serializers
 from .serializers import (
     ArticleSerializer,
     CommentPostSerializer,
     LikeArticleSerializer,
+    ProfileSerializer,
     UserSerializer,
 )
 
@@ -83,6 +84,42 @@ class UserDetail(generics.RetrieveAPIView):
     serializer_class = UserSerializer
 
 
+class ProfileList(
+    mixins.ListModelMixin,
+    mixins.CreateModelMixin,
+    generics.GenericAPIView
+):
+
+    queryset = Profile.objects.all()
+    serializer_class = ProfileSerializer
+
+    def get(self, request, *args, **kwargs):
+        return self.list(request, *args, **kwargs)
+
+    def post(self, request, *args, **kwargs):
+        return self.create(request, *args, **kwargs)
+
+
+class ProfileDetail(
+    mixins.RetrieveModelMixin,
+    mixins.UpdateModelMixin,
+    mixins.DestroyModelMixin,
+    generics.GenericAPIView
+):
+
+    queryset = Profile.objects.all()
+    serializer_class = ProfileSerializer
+
+    def get(self, request, *args, **kwargs):
+        return self.retrieve(self, request, *args, **kwargs)
+
+    def put(self, request, *args, **kwargs):
+        return self.update(self, request, *args, **kwargs)
+
+    def delete(self, request, *args, **kwargs):
+        return self.destroy(self, request, *args, **kwargs)
+
+
 class CommentCreate(generics.CreateAPIView):
     serializer_class = CommentPostSerializer
 
@@ -97,6 +134,7 @@ class LikeDetail(
     mixins.DestroyModelMixin,
     generics.GenericAPIView
 ):
+
     queryset = LikeUnlikeArticle.objects.all()
     serializer_class = LikeArticleSerializer
 
@@ -115,6 +153,7 @@ class ArticleList(
     mixins.CreateModelMixin,
     generics.GenericAPIView
 ):
+
     queryset = Article.objects.all()
     serializer_class = ArticleSerializer
 
@@ -131,6 +170,7 @@ class ArticleDetail(
     mixins.DestroyModelMixin,
     generics.GenericAPIView
 ):
+
     queryset = Article.objects.all()
     serializer_class = ArticleSerializer
 

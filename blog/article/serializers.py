@@ -2,7 +2,7 @@ from django.contrib.auth.models import User
 from rest_framework import serializers
 
 # models
-from .models import Article, Comment, LikeUnlikeArticle
+from .models import Article, Comment, LikeUnlikeArticle, Profile
 
 
 class UserSerializer(serializers.HyperlinkedModelSerializer):
@@ -15,6 +15,13 @@ class UserSerializer(serializers.HyperlinkedModelSerializer):
         extra_kwargs = {
             'password': {'write_only': True}
         }
+
+
+class ProfileSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = Profile
+        fields = '__all__'
 
 
 class CommentNestedArticleSerializer(serializers.ModelSerializer):
