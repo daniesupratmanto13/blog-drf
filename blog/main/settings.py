@@ -42,6 +42,8 @@ INSTALLED_APPS = [
 
     'rest_framework',
     'drf_yasg',
+    'ckeditor',
+    'ckeditor_uploader',
 ]
 
 MIDDLEWARE = [
@@ -124,6 +126,12 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 
+# STATICFILES_DIRS = [
+#     BASE_DIR / 'static'
+# ]
+
+STATIC_ROOT = BASE_DIR / 'static'
+
 MEDIA_URL = '/media/'
 
 MEDIA_ROOT = BASE_DIR / 'static/media'
@@ -132,3 +140,9 @@ MEDIA_ROOT = BASE_DIR / 'static/media'
 # https://docs.djangoproject.com/en/3.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+
+# CKEDITOR SETTINGS
+CKEDITOR_BASEPATH = "/static/ckeditor/ckeditor/"
+CKEDITOR_UPLOAD_PATH = "CKEuploads/"
+CKEDITOR_FILENAME_GENERATOR = 'main.utils.get_filename'
