@@ -145,4 +145,4 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 # CKEDITOR SETTINGS
 CKEDITOR_BASEPATH = "/static/ckeditor/ckeditor/"
 CKEDITOR_UPLOAD_PATH = "CKEuploads/"
-CKEDITOR_FILENAME_GENERATOR = 'main.utils.get_filename'
+CKEDITOR_FILENAME_GENERATOR = 'main.utils.cke_pic_path'
