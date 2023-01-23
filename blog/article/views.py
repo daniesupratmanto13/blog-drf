@@ -1,8 +1,11 @@
+from django.contrib.auth import authenticate
 from django.contrib.auth.models import User
 from rest_framework import generics
 from rest_framework import mixins
 from rest_framework import viewsets
-from rest_framework.decorators import api_view
+from rest_framework.authentication import TokenAuthentication
+from rest_framework.decorators import api_view, authentication_classes, permission_classes
+from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.reverse import reverse
 from rest_framework.authtoken.models import Token
@@ -42,11 +45,14 @@ class LoginViewSet(viewsets.ViewSet):
     serializer_class = AuthTokenSerializer
 
     def create(self, request):
-        user = User.objects.filter(username=request.data.get(
-            'username'), email=request.data.get('email')).first()
+        user = authenticate(request, username=request.data.get(
+            'username'), password=request.data.get(
+            'password'))
+        # user = User.objects.filter(username=request.data.get(
+        #     'username')).first()
 
         if user is None:
-            return Response({'message': 'login failed', 'data': {}})
+            return Response({'message': 'login failed', 'data': {'n': 'None'}})
 
         serializer = self.serializer_class(
             data=request.data, context={'request': request})
@@ -57,7 +63,7 @@ class LoginViewSet(viewsets.ViewSet):
 
             return Response({'message': 'success', 'status': True, 'data': {
                 'id': user.id,
-                'name': user.name,
+                'name': user.username,
                 'email': user.email,
                 'token': token.key
             }})
@@ -66,6 +72,8 @@ class LoginViewSet(viewsets.ViewSet):
 
 
 @api_view(['GET'])
+@authentication_classes([TokenAuthentication])
+@permission_classes([IsAuthenticated])
 def api_root(request, format=None):
     return Response({
         'users': reverse('article:user-list', request=request, format=format),
@@ -75,11 +83,15 @@ def api_root(request, format=None):
 
 
 class UserList(generics.ListAPIView):
+    authentication_classes = [TokenAuthentication]
+    permission_classes = [IsAuthenticated]
     queryset = User.objects.all()
     serializer_class = UserSerializer
 
 
 class UserDetail(generics.RetrieveAPIView):
+    authentication_classes = [TokenAuthentication]
+    permission_classes = [IsAuthenticated]
     queryset = User.objects.all()
     serializer_class = UserSerializer
 
@@ -89,7 +101,8 @@ class ProfileList(
     mixins.CreateModelMixin,
     generics.GenericAPIView
 ):
-
+    authentication_classes = [TokenAuthentication]
+    permission_classes = [IsAuthenticated]
     queryset = Profile.objects.all()
     serializer_class = ProfileSerializer
 
@@ -106,7 +119,8 @@ class ProfileDetail(
     mixins.DestroyModelMixin,
     generics.GenericAPIView
 ):
-
+    authentication_classes = [TokenAuthentication]
+    permission_classes = [IsAuthenticated]
     queryset = Profile.objects.all()
     serializer_class = ProfileSerializer
 
@@ -121,10 +135,14 @@ class ProfileDetail(
 
 
 class CommentCreate(generics.CreateAPIView):
+    authentication_classes = [TokenAuthentication]
+    permission_classes = [IsAuthenticated]
     serializer_class = CommentPostSerializer
 
 
 class LikeCreate(generics.CreateAPIView):
+    authentication_classes = [TokenAuthentication]
+    permission_classes = [IsAuthenticated]
     serializer_class = LikeArticleSerializer
 
 
@@ -134,7 +152,8 @@ class LikeDetail(
     mixins.DestroyModelMixin,
     generics.GenericAPIView
 ):
-
+    authentication_classes = [TokenAuthentication]
+    permission_classes = [IsAuthenticated]
     queryset = LikeUnlikeArticle.objects.all()
     serializer_class = LikeArticleSerializer
 
@@ -153,7 +172,8 @@ class ArticleList(
     mixins.CreateModelMixin,
     generics.GenericAPIView
 ):
-
+    authentication_classes = [TokenAuthentication]
+    permission_classes = [IsAuthenticated]
     queryset = Article.objects.all()
     serializer_class = ArticleSerializer
 
@@ -170,7 +190,8 @@ class ArticleDetail(
     mixins.DestroyModelMixin,
     generics.GenericAPIView
 ):
-
+    authentication_classes = [TokenAuthentication]
+    permission_classes = [IsAuthenticated]
     queryset = Article.objects.all()
     serializer_class = ArticleSerializer
 
