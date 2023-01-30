@@ -6,7 +6,7 @@ Clone:
 
 ```sh
 git@github.com:daniesupratmanto13/blog-drf.git
-cd blog_django
+cd blog-drf
 ```
 
 Install it and run:
